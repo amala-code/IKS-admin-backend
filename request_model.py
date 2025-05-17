@@ -16,3 +16,12 @@ class Token(BaseModel):
     access_token: str
     token_type: str
 
+from datetime import datetime
+
+class EventCreate(BaseModel):
+    title: str
+    description: str
+    date_time: str
+    location: str
+    category: str
+    image: str

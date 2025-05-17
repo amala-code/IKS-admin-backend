@@ -1,7 +1,8 @@
 
 from typing import Optional
 from pydantic import BaseModel, EmailStr
-
+from dataclasses import dataclass, field
+from datetime import datetime
 
 class Member(BaseModel):
     name: str
@@ -9,12 +10,12 @@ class Member(BaseModel):
     email: EmailStr
     phone: str
     id: str  # Custom ID field
-    year_of_joining: int
-    amount_paid_total: float
-    member_true: bool
-    amount_paid_registration: float
-    amount_paid_subscription: float
-    amount_subscription: bool
+    year_of_joining: int = field(default_factory=lambda: datetime.now().year)
+    amount_paid_total: float=0
+    member_true: bool = False  # Default to False
+    amount_paid_registration: float=0
+    amount_paid_subscription: float=0
+    amount_subscription: bool=False
 
 class MemberUpdate(BaseModel):
     name: Optional[str] = None

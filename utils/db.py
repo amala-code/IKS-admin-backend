@@ -8,6 +8,7 @@ client = MongoClient(MONGO_URI)
 db = client[DB_USERNAME]  
 users_collection = db.users  
 members_collection = db.members
+events_collection = db.events
 
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30

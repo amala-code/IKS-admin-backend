@@ -11,7 +11,7 @@ class PhoneLookup(BaseModel):
     phone: str
 
 
-MEMBER_ID_COUNTER = 1000
+MEMBER_ID_COUNTER = 2000
 
 @router.post("/register_member", response_model=dict)
 async def register_member(member: Member):
@@ -28,13 +28,31 @@ async def register_member(member: Member):
     result = members_collection.insert_one(member.model_dump())
     return {"message": "Member registered successfully", "member_id": str(result.inserted_id)}
 
+@router.post("/register_new_user_request", response_model=dict)
+async def register_member(member: Member):
+    # Check for duplicate ID or email
+    if members_collection.find_one({"$or": [{"id": member.id}, {"email": member.email}]}):
+        raise HTTPException(status_code=400, detail="Member with this ID or email already exists.")
+    
+    # Generate a new ID and make sure it's a string
+    global MEMBER_ID_COUNTER
+    member.id = str(MEMBER_ID_COUNTER)
+    MEMBER_ID_COUNTER += 1
+
+    # Insert into collection
+    result = members_collection.insert_one(member.model_dump())
+    return {"message": "Member registered successfully", "member_id": str(result.inserted_id)}
 
 @router.post("/member/phone", response_model=dict)
 async def get_member_by_phone_body(payload: PhoneLookup = Body(...)):
     phone = payload.phone
-    member = members_collection.find_one({"phone": phone})
+    member = members_collection.find_one({
+        "phone": phone,
+        "member_true": True  # Ensure this condition is met
+    })
+    
     if not member:
-        raise HTTPException(status_code=404, detail="Member not found with this phone number.")
+        raise HTTPException(status_code=404, detail="Member not found with this phone number and member_true = true.")
     
     member["_id"] = str(member["_id"])
     return member
@@ -81,6 +99,16 @@ async def filter_members(
         filtered_members.append(member)
 
     return {"filtered_members": filtered_members}
+
+@router.get("/non_members", response_model=dict)
+async def get_non_members():
+    members = []
+    for member in members_collection.find({"member_true": False}):
+        member["_id"] = str(member["_id"])  # Convert ObjectId to string
+        members.append(member)
+    
+    return {"members": members}
+
 
 from fastapi import Request
 
