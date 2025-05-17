@@ -55,7 +55,12 @@ async def get_member_by_phone_body(payload: PhoneLookup = Body(...)):
         raise HTTPException(status_code=404, detail="Member not found with this phone number and member_true = true.")
     
     member["_id"] = str(member["_id"])
-    return member
+    return {
+        "member_id": str(member["_id"]),
+        "id": member.get("id"),
+        "name": member.get("name")
+    }
+
 
 @router.put("/member/update/{id}", response_model=dict)
 async def update_member(id: str = Path(...), update_payload: MemberUpdate = Body(...)):
