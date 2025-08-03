@@ -16,6 +16,9 @@ class Member(BaseModel):
     amount_paid_registration: float=0
     amount_paid_subscription: float=0
     amount_subscription: bool=False
+    date_of_subscription: Optional[str] = None
+    transaction_id: Optional[str] = None
+    
 
 class MemberUpdate(BaseModel):
     name: Optional[str] = None
@@ -27,4 +30,6 @@ class MemberUpdate(BaseModel):
     member_true: Optional[bool] = None
     amount_paid_registration: Optional[float] = None
     amount_paid_subscription: Optional[float] = None
-    amount_subscription: Optional[bool] = None
+    amount_subscription: Optional[bool] = False
+    date_of_subscription: Optional[str] = None
+    transaction_id: Optional[str] = None
