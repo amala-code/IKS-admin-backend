@@ -2,8 +2,8 @@ from bson import ObjectId
 from fastapi import Depends, HTTPException, APIRouter, Body, Path,Query
 from pydantic import BaseModel
 from typing import Optional
-from model.member_model import Member, MemberUpdate, NonMember
-from utils.db import members_collection, non_members_collection
+from api.model.member_model import Member, MemberUpdate, NonMember
+from api.utils.db import members_collection, non_members_collection
 
 router = APIRouter()
 
@@ -215,8 +215,8 @@ async def get_member_by_id(id: str = Path(...)):
 from fastapi import Request, Depends, HTTPException, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 import jwt
-from conf import SECRET_KEY
-from utils.db import ALGORITHM
+from api.conf import SECRET_KEY
+from api.utils.db import ALGORITHM
 
 security = HTTPBearer()
 
