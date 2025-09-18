@@ -78,5 +78,3 @@ async def ping():
 # Add this line - this is crucial!
 handler = Mangum(app)
 
-if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0", port=8001, reload=True)
