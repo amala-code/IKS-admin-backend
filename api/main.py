@@ -39,6 +39,7 @@
 
 
 import logging
+import uvicorn
 from fastapi.responses import JSONResponse
 from fastapi import FastAPI, APIRouter, status
 from fastapi.middleware.cors import CORSMiddleware
@@ -76,3 +77,6 @@ async def ping():
 
 # Add this line - this is crucial!
 handler = Mangum(app)
+
+if __name__ == "__main__":
+    uvicorn.run("main:app", host="0.0.0.0", port=8001, reload=True)
