@@ -39,27 +39,28 @@
 
 
 import logging
-import uvicorn
 from fastapi.responses import JSONResponse
-from fastapi import FastAPI, APIRouter, status
+from fastapi import FastAPI, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
-from mangum import Mangum  # Add this import
+from mangum import Mangum
+
+# Import routes (make sure the paths match your project structure inside Lambda)
 import api.routes.login_route as login
 import api.routes.member_route as member
 import api.routes.event_route as event
 import api.routes.subscription_routes as subscription
-# from fastapi.staticfiles import StaticFiles  # Comment this out
 
 app = FastAPI()
 
 version_router = APIRouter()
-
 version_router.include_router(login.router, tags=["login"])
 version_router.include_router(member.router, tags=["member"])
 version_router.include_router(event.router, tags=["event"])
 version_router.include_router(subscription.router, tags=["subscription"])
+
 app.include_router(version_router)
 
+# CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -68,13 +69,10 @@ app.add_middleware(
     allow_credentials=True,
 )
 
+# Test route
 @app.get("/")
 async def ping():
     return JSONResponse(content={"status": "success", "message": "Pong!"}, status_code=200)
 
-# Comment out StaticFiles for now
-# app.mount("/static", StaticFiles(directory="static"), name="static")
-
-# Add this line - this is crucial!
+# The entry point for AWS Lambda
 handler = Mangum(app)
-
