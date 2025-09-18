@@ -1,14 +1,14 @@
 from fastapi import APIRouter, HTTPException
 
-from api.model.payment_model import OrderRequest, PaymentResponse, PaymentVerification
-from api.services.payment_service import PaymentService
+from model.payment_model import OrderRequest, PaymentResponse, PaymentVerification
+from services.payment_service import PaymentService
 
 router = APIRouter()
 payment_service = PaymentService()
 
 @router.get("/membership-amount")
 async def get_membership_amount():
-    return {"amount": 1}
+    return {"amount": 600}
 
 @router.post("/create-order")
 async def create_order(order_request: OrderRequest):
