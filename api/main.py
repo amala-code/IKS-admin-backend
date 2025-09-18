@@ -42,11 +42,12 @@ import logging
 from fastapi.responses import JSONResponse
 from fastapi import FastAPI, APIRouter, status
 from fastapi.middleware.cors import CORSMiddleware
+from mangum import Mangum  # Add this import
 import api.routes.login_route as login
 import api.routes.member_route as member
 import api.routes.event_route as event
 import api.routes.subscription_routes as subscription
-from fastapi.staticfiles import StaticFiles
+# from fastapi.staticfiles import StaticFiles  # Comment this out
 
 app = FastAPI()
 
@@ -70,4 +71,8 @@ app.add_middleware(
 async def ping():
     return JSONResponse(content={"status": "success", "message": "Pong!"}, status_code=200)
 
-app.mount("/static", StaticFiles(directory="static"), name="static")
+# Comment out StaticFiles for now
+# app.mount("/static", StaticFiles(directory="static"), name="static")
+
+# Add this line - this is crucial!
+handler = Mangum(app)
