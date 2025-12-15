@@ -12,7 +12,7 @@ class PhoneLookup(BaseModel):
     phone: str
 
 
-MEMBER_ID_COUNTER = 2000
+MEMBER_ID_COUNTER = 1345
 
 @router.post("/register_member", response_model=dict)
 async def register_member(member: Member):
@@ -21,9 +21,9 @@ async def register_member(member: Member):
         raise HTTPException(status_code=400, detail="Member with this ID or email already exists.")
     
     # Generate a new ID and make sure it's a string
-    # global MEMBER_ID_COUNTER
-    # member.id = str(MEMBER_ID_COUNTER)
-    # MEMBER_ID_COUNTER += 1
+    global MEMBER_ID_COUNTER
+    member.id = str(MEMBER_ID_COUNTER)
+    MEMBER_ID_COUNTER += 1
 
     # Insert into collection
     result = members_collection.insert_one(member.model_dump())
